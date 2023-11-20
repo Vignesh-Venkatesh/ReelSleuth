@@ -31,6 +31,7 @@ body{
     color: var(--neutrals-100);
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 
@@ -109,6 +110,7 @@ body{
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 80px;
+    width: 75%;
 }
 
 .options-bar{

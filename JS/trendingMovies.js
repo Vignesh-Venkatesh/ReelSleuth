@@ -79,6 +79,7 @@ function trendingMoviesWeek(){
                     </a>
 
                     <div id="misc-buttons">
+                        ${checkFavorites(movie.id)}
                         ${checkBookmark(movie.id)}
                     </div>
                 </div>
