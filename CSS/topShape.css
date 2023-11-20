@@ -1,0 +1,41 @@
+:root{
+    --accent1-500: #ff7f01;
+    --accent1-400: #ff9935;
+    --accent1-300: #ffb167;
+    --accent1-200: #ffcb99;
+    --accent1-100: #ffe5cc;
+    --neutrals-1000: #100f11;
+    --neutrals-900: #272627;
+    --neutrals-800: #3b3a3b;
+    --neutrals-700: #504f51;
+    --neutrals-600: #666566;
+    --neutrals-500: #6e6d6e;
+    --neutrals-400: #7c7b7c;
+    --neutrals-300: #929192;
+    --neutrals-200: #a6a5a6;
+    --neutrals-100: #b0afb1;
+    --font: 'Space Grotesk';
+    --font-2: 'Montserrat';
+}
+
+.custom-shape-divider-top-1700442811 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.custom-shape-divider-top-1700442811 svg {
+    position: relative;
+    display: block;
+    width: calc(230% + 5px);
+    height: 192px;
+}
+
+.custom-shape-divider-top-1700442811 .shape-fill {
+    fill: --neutrals-100;
+}
