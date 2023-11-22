@@ -1,4 +1,22 @@
 import {getMovieDetails, imageBaseUrl, backdropBaseUrl, getQueryParam, apiOptions, youtubeTrailer, getCastInfo} from './fetchDetails.js';
+import {auth} from './firebaseConfig.js';
+import {onAuthStateChanged, signOut} from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+
+
+
+//==========================================================
+// Checking if user is logged in or logged out
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is logged in
+        console.log("User logged in:", user);
+    } else {
+        // User is logged out
+        window.location.href = "./authenticate.html"
+    }
+});
+//==========================================================
+
 
 const content = document.getElementById("content");
 
@@ -26,12 +44,9 @@ castInfo(castID)
 
 function castInfo(castID){
     getCastInfo(castID)
-    // .then(response => response.json())
     .then(cast => {
-        console.log(cast)
 
         if (cast.profile_path == null){
-            console.log("came here")
             
             const backdrop_div = document.getElementById("backdrop")
             backdrop_div.src = "Assets/Images/sad-film-reel.png"

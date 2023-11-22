@@ -198,3 +198,7 @@ span{
 .fa-solid{
     color: var(--accent1-500);
 }
+
+.fa-eye{
+    color: rgb(39, 151, 39);
+}

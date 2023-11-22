@@ -1,4 +1,20 @@
 import { apiOptions, getCastList, getQueryParam, imageBaseUrl,getMovieDetails } from "./fetchDetails.js";
+import {auth} from './firebaseConfig.js';
+import {onAuthStateChanged, signOut} from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+
+//==========================================================
+// Checking if user is logged in or logged out
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is logged in
+      console.log("User logged in:", user);
+    } else {
+      // User is logged out
+      window.location.href = "./authenticate.html"
+    }
+});
+//==========================================================
+
 
 const titleH1 = document.getElementById("title");
 const content = document.getElementById("content");
@@ -48,7 +64,7 @@ function castActorList(){
     getCastList(movieId)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
+
         data.cast.forEach(person => {
             const posterUrl = person.profile_path ? imageBaseUrl + person.profile_path : 'path_to_default_image';
 
@@ -99,7 +115,7 @@ function crewActorList(){
     getCastList(movieId)
     .then(response => response.json())
     .then(data => {
-        console.log(data)
+
         data.crew.forEach(person => {
             const posterUrl = person.profile_path ? imageBaseUrl + person.profile_path : 'path_to_default_image';
 

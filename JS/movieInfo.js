@@ -1,4 +1,19 @@
 import {getMovieDetails, imageBaseUrl, backdropBaseUrl, getQueryParam, apiOptions, youtubeTrailer} from './fetchDetails.js';
+import {auth} from './firebaseConfig.js';
+import {onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+
+//==========================================================
+// Checking if user is logged in or logged out
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is logged in
+        console.log("User logged in:", user);
+    } else {
+        // User is logged out
+        window.location.href = "./authenticate.html"
+    }
+});
+//==========================================================
 
 const content = document.getElementById("content");
 
@@ -33,13 +48,10 @@ function movieInfo(movieID){
         }
 
         else{
-            console.log(movie)
-            console.log(movie.budget)
+
             document.title = `${movie.title || movie.name || movie.original_title} | ReelSleuth`
             
             // If movie exists
-            console.log(movie)
-            console.log(movie.budget)
             document.title = `${movie.title || movie.name || movie.original_title} | ReelSleuth`
             
             // constructing the poster URL
@@ -48,7 +60,6 @@ function movieInfo(movieID){
             // backdrop of the page
             const backdrop_div = document.getElementById("backdrop")
             backdrop_div.src = backdropBaseUrl+movie.backdrop_path
-            console.log(backdropBaseUrl+movie.backdrop_path)
 
             // Information of the movie
             const movieInfoDiv = document.createElement("div")
@@ -109,14 +120,14 @@ function movieInfo(movieID){
 //==============================================================================
 // fetching the genres of the film
 function displayGenre(movie){
-    console.log(movie)
+
     if (movie.genres.len >= 1){
         return movie.genres.name
     }
     else{
         let l="";
         movie.genres.forEach(element => {
-            console.log(element)
+
             l = l+element.name+", "
         });
         return l.slice(0,-2);

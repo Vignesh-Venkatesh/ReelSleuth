@@ -150,7 +150,6 @@ export function youtubeTrailer(movie) {
 
                 if (trailer) {
                     let trailerUrl = `https://www.youtube.com/watch?v=${trailer.key}`;
-                    console.log(trailerUrl);
                     resolve(trailerUrl);
                 } else {
                     console.log("No trailer or teaser found.");

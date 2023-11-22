@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
         <link rel="shortcut icon" href="Assets/Images/ReelSleuth-Logo.png" type="image/x-icon">
         <link rel="stylesheet" href="CSS/topShape.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -25,9 +26,18 @@
             <a href="index.html"><button id="home-btn">Home</button></a>
             <a href="./trendingMovies.html"><button id="trending-movies-btn">Trending Movies</button></a>
             <a href="./myStats.html"><button id="my-stats-btn">My Stats</button></a>
+
+            <div class="dropdown">
+              <button class="dropbtn">Account Options</button>
+              <div class="dropdown-content">
+                  <p id="logout-btn">Logout</p>
+              </div>
+            </div>
+
         </div>
 
         <div class="options-bar">
+            <button id="my-watched-btn">Watched Films</button>
             <button id="my-favorites-btn">My Favorites</button>
             <button id="my-watchlists-btn">My Watchlist</button>
         </div>

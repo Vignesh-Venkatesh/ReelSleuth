@@ -1,5 +1,38 @@
 import {getTrendingMoviesDay, imageBaseUrl} from './fetchDetails.js';
-import { isInWatchlist, addToWatchlist, removeFromWatchlist, isInFavorites, addToFavorites, removeFromFavorites } from './userFunctions.js';
+import { isInWatchlist, addToWatchlist, removeFromWatchlist, isInFavorites, addToFavorites, removeFromFavorites, isInWatched, addToWatched, removeFromWatched } from './userFunctions.js';
+import {auth} from './firebaseConfig.js';
+import { addToWatchlistFireStore, addToFavoritesFireStore,  addToWatchedFireStore, removeFromFavoritesFireStore, removeFromWatchlistFireStore, removeFromWatchedFireStore, getFavoritesFireStoreAndUpdateLocalStorage, getWatchlistFireStoreAndUpdateLocalStorage, getWatchedFireStoreAndUpdateLocalStorage, checkLocalStorageForFavorites, checkLocalStorageForWatchlist, checkLocalStorageForWatched } from './userFunctions.js';
+import {onAuthStateChanged, signOut} from 'https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js';
+
+//==========================================================
+// Checking if user is logged in or logged out
+let userID;
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+
+        // User is logged in
+        userID = user.uid
+        console.log("User logged in:", user.uid);
+
+        if (checkLocalStorageForFavorites() == false){
+
+            getFavoritesFireStoreAndUpdateLocalStorage(userID) // fetch db reset Favorites local storage
+        }
+        if (checkLocalStorageForWatchlist() == false){
+
+            getWatchlistFireStoreAndUpdateLocalStorage(userID) // fetch db reset Watchlist local storage
+        }
+        if (checkLocalStorageForWatched() == false){
+
+            getWatchedFireStoreAndUpdateLocalStorage(userID) // fetch db reset Watchlist local storage
+        }
+
+    } else {
+        // User is logged out
+        window.location.href = "./authenticate.html"
+    }
+});
+//==========================================================
 
 const titleH1 = document.getElementById("title");
 const content = document.getElementById("content");
@@ -59,8 +92,7 @@ function trendingMoviesWeek(){
     getTrendingMoviesDay('week')
     .then(response => response.json())
     .then(data => {
-        
-        console.log(data)
+
 
         // iterating through each result
         data.results.forEach(movie =>{
@@ -79,6 +111,7 @@ function trendingMoviesWeek(){
                     </a>
 
                     <div id="misc-buttons">
+                        ${checkWatched(movie.id)}
                         ${checkFavorites(movie.id)}
                         ${checkBookmark(movie.id)}
                     </div>
@@ -86,6 +119,8 @@ function trendingMoviesWeek(){
 
             `
             content.appendChild(cardDiv);
+            setupWatchedToggle(movie.id);
+            setupFavoriteToggle(movie.id);
             setupBookmarkToggle(movie.id);
             ctr += 1
         });
@@ -108,7 +143,6 @@ function trendingMoviesToday(){
     .then(response => response.json())
     .then(data => {
         
-        console.log(data)
 
         // iterating through each result
         data.results.forEach(movie =>{
@@ -127,6 +161,7 @@ function trendingMoviesToday(){
                     </a>
 
                     <div id="misc-buttons">
+                        ${checkWatched(movie.id)}
                         ${checkFavorites(movie.id)}
                         ${checkBookmark(movie.id)}
                     </div>
@@ -135,6 +170,7 @@ function trendingMoviesToday(){
             
             `
             content.appendChild(cardDiv);
+            setupWatchedToggle(movie.id);
             setupFavoriteToggle(movie.id);
             setupBookmarkToggle(movie.id);
             ctr += 1
@@ -151,6 +187,43 @@ function trendingMoviesToday(){
 }
 //==============================================================================
 
+//==============================================================================
+// Checking if movie is watched or not
+function setupWatchedToggle(movieID) {
+    const onIcon = document.getElementById(`watched-on-${movieID}`);
+    const offIcon = document.getElementById(`watched-off-${movieID}`);
+
+    onIcon.addEventListener('click', () => {
+        onIcon.style.display = 'none';
+        offIcon.style.display = 'flex';
+        removeFromWatchedFireStore(userID, movieID);
+        removeFromWatched(movieID);
+    });
+    
+
+    offIcon.addEventListener('click', () => {
+        offIcon.style.display = 'none';
+        onIcon.style.display = 'flex';
+        
+        addToWatchedFireStore(userID, movieID)
+        addToWatched(movieID)
+    });
+}
+function checkWatched(movieID){
+    if (isInWatched(movieID)){
+        return `
+            <i class="fa-solid fa-eye" id="watched-on-${movieID}"></i>
+            <i class="fa-regular fa-eye-slash" id="watched-off-${movieID}" style="display: none;"></i>
+        `
+    }
+    else{
+        return `
+            <i class="fa-solid fa-eye" id="watched-on-${movieID}" style="display: none;"></i>
+            <i class="fa-regular fa-eye-slash" id="watched-off-${movieID}"></i>
+        `
+    }
+}
+//==============================================================================
 
 //==============================================================================
 // Checking if movie is favorited or not
@@ -161,12 +234,14 @@ function setupFavoriteToggle(movieID) {
     onIcon.addEventListener('click', function() {
         this.style.display = 'none';
         offIcon.style.display = 'flex';
+        removeFromFavoritesFireStore(userID, movieID);
         removeFromFavorites(movieID)
     });
 
     offIcon.addEventListener('click', function() {
         this.style.display = 'none';
         onIcon.style.display = 'flex';
+        addToFavoritesFireStore(userID, movieID)
         addToFavorites(movieID)
     });
 }
@@ -187,7 +262,7 @@ function checkFavorites(movieID){
 //==============================================================================
 
 //==============================================================================
-// Checking if movie is bookmarked or not
+// Checking if movie is watchlisted or not
 function setupBookmarkToggle(movieID) {
     const onIcon = document.getElementById(`watchlist-on-${movieID}`);
     const offIcon = document.getElementById(`watchlist-off-${movieID}`);
@@ -195,12 +270,14 @@ function setupBookmarkToggle(movieID) {
     onIcon.addEventListener('click', function() {
         this.style.display = 'none';
         offIcon.style.display = 'flex';
+        removeFromWatchlistFireStore(userID, movieID);
         removeFromWatchlist(movieID)
     });
 
     offIcon.addEventListener('click', function() {
         this.style.display = 'none';
         onIcon.style.display = 'flex';
+        addToWatchlistFireStore(userID, movieID)
         addToWatchlist(movieID)
     });
 }
