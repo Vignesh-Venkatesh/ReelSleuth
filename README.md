@@ -7,7 +7,8 @@ This is a personal project of mine and is a website where you can search for mov
 I've always been a movie buff and wanted to keep track of the movies I watched, hence I decided to go ahead and make a website to mark my favorites, watched and keep a track of the movies I want to watch.
 
 Presenting to you, [ReelSleuth](https://reelsleuth.netlify.app/)
-![Reel Sleuth Main Page](Assets\Images\reelSleuthMainPage.png)
+![Reel Sleuth Main Page](Assets/Images/reelSleuthMainPage.png)
+
 
 ## Technologies
 - I have used ```Javascript``` that does most of the heavy-lifting.
